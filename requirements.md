@@ -11,7 +11,7 @@ mezclada).
 | RF-01 | G7-2 | El sistema debe permitir al PAS obtener un precio de seguro automotor ingresando los datos del vehiculo, del conductor y la cobertura elegida| Usuario/Funcional | Caso 3.1 y 7; voz de A. Pampin (4) | Sin alguno de los tres datos no devuelve precio |
 | RF-02 | G7-3| 3	El sistema debe registrar cada cotizacion con sus datos de entrada, su precio y su fecha | Sistema/funcional | Caso 2.1 y 3.1; | De cualquier cotizacion se pueden consultar vehiculo, conductor, cobertura, precio y fecha|
 | RF-03 | G7-4 | El sistema debe registrar la versión de tarifas con la que se calculó cada cotización | Sistema / F | Caso §3.1 | En cualquier cotización se ve la versión de tarifas usada. |
-| RF-04 | | | | | |
+| RF-04 | G7-5 | Dos cotizaciones con el mismo vehículo, conductor, cobertura y versión de tarifas deben dar el mismo precio, sin importar qué PAS las pida | Negocio / F | Caso §3.1 | Se cotiza el mismo caso con dos PAS distintos: los precios son iguales |
 | RF-05 | | | | | |
 
 ## Fragmentos que NO son requerimientos funcionales
