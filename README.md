@@ -1,1 +1,0 @@
-# Grupo-7-Sistemas-de-informacion-II-
