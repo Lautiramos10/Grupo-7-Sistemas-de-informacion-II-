@@ -1,0 +1,217 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cotizador Pampa · G7</title>
+<style>
+  :root { --tinta:#1f2a44; --suave:#5b6478; --borde:#d6dae3; --fondo:#f6f7fa; --acento:#2f5fd0; --aviso:#fff6db; --avisoBorde:#e2c35b; --error:#b3261e; }
+  * { box-sizing:border-box; }
+  body { margin:0; font-family:system-ui,-apple-system,"Segoe UI",sans-serif; color:var(--tinta); background:var(--fondo); }
+  header { background:var(--tinta); color:#fff; padding:14px 20px; }
+  header h1 { margin:0; font-size:18px; }
+  header p { margin:2px 0 0; font-size:13px; opacity:.8; }
+  main { max-width:1000px; margin:0 auto; padding:16px; display:grid; gap:16px; }
+  section { background:#fff; border:1px solid var(--borde); border-radius:8px; padding:16px; }
+  h2 { font-size:15px; margin:0 0 12px; }
+  .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:10px 16px; }
+  label { display:flex; flex-direction:column; font-size:13px; gap:4px; color:var(--suave); }
+  input, select { font:inherit; padding:6px 8px; border:1px solid var(--borde); border-radius:6px; color:var(--tinta); }
+  fieldset { border:1px solid var(--borde); border-radius:6px; margin:0 0 12px; padding:10px 12px; }
+  legend { font-size:13px; font-weight:600; padding:0 4px; }
+  button { font:inherit; background:var(--acento); color:#fff; border:0; border-radius:6px; padding:8px 16px; cursor:pointer; }
+  .aviso { background:var(--aviso); border:1px solid var(--avisoBorde); border-radius:6px; padding:8px 10px; font-size:13px; margin:6px 0; }
+  .error { color:var(--error); font-size:13px; margin:6px 0; }
+  .precio { font-size:28px; font-weight:700; margin:4px 0; }
+  .chico { font-size:12px; color:var(--suave); }
+  table { width:100%; border-collapse:collapse; font-size:13px; }
+  th, td { text-align:left; border-bottom:1px solid var(--borde); padding:6px; vertical-align:top; }
+  th { background:var(--fondo); }
+  .tabla { overflow-x:auto; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Cotizador de seguro automotor · Aseguradora Pampa</h1>
+  <p>Página generada desde la especificación del Grupo 7 (frente Cotización) · evidencia de validación E3</p>
+</header>
+<main>
+
+  <!-- Precondición UC-01: el PAS está identificado en el sistema -->
+  <section>
+    <h2>PAS identificado</h2>
+    <label style="max-width:320px">PAS
+      <select id="pas">
+        <option value="PAS 101 – J. Ponce">PAS 101 – J. Ponce</option>
+        <option value="PAS 102 – PAS de prueba">PAS 102 – PAS de prueba</option>
+      </select>
+    </label>
+    <p class="chico">La especificación no define cómo se identifica el PAS: se elige de una lista de prueba.</p>
+  </section>
+
+  <!-- UC-01 pasos 1 a 5 · RF-01 -->
+  <section>
+    <h2>Nueva cotización</h2>
+    <form id="form" novalidate>
+      <!-- UC-01 paso 2 · RF-01: datos del vehículo -->
+      <fieldset>
+        <legend>Datos del vehículo</legend>
+        <div class="grid">
+          <label>Año del vehículo <input type="number" id="anio" min="1950" max="2100"></label>
+          <label>Zona de radicación
+            <select id="zona"><option value="">— elegir —</option><option>CABA</option><option>GBA</option><option>Interior</option></select>
+          </label>
+          <label>Guarda en garaje
+            <select id="garaje"><option value="">— elegir —</option><option value="SI">Sí</option><option value="NO">No</option></select>
+          </label>
+        </div>
+      </fieldset>
+      <!-- UC-01 paso 2 · RF-01: datos del conductor -->
+      <fieldset>
+        <legend>Datos del conductor</legend>
+        <div class="grid">
+          <label>Edad del conductor habitual <input type="number" id="edad" min="0" max="120"></label>
+          <label>Siniestros últimos 24 meses <input type="number" id="siniestros" min="0" max="50"></label>
+        </div>
+      </fieldset>
+      <!-- UC-01 paso 3 · RF-01: cobertura -->
+      <fieldset>
+        <legend>Cobertura</legend>
+        <label style="max-width:320px">Cobertura
+          <select id="cobertura">
+            <option value="">— elegir —</option>
+            <option value="RC">Responsabilidad Civil (RC)</option>
+            <option value="TC">Terceros Completos (TC)</option>
+            <option value="TR">Todo Riesgo (TR)</option>
+          </select>
+        </label>
+      </fieldset>
+      <!-- UC-01 flujo alternativo 5a · RF-05: pendiente, no se aplica -->
+      <div class="aviso"><b>Descuentos (RF-05, UC-01 5a):</b> [NEEDS CLARIFICATION: si los descuentos se suman (J. Ponce) o tienen tope (H. Vidal), y qué es un cliente VIP (M. Duarte / R. Ferreyra). Decide M. Duarte.] La página no aplica descuentos.</div>
+      <button type="submit" id="cotizar">Cotizar</button>
+    </form>
+    <div id="resultado"></div>
+  </section>
+
+  <!-- UC-01 paso 6 · RF-02 · RF-03 -->
+  <section>
+    <h2>Registro de cotizaciones</h2>
+    <div class="tabla">
+      <table>
+        <thead><tr><th>Fecha y hora</th><th>PAS</th><th>Vehículo</th><th>Conductor</th><th>Cobertura</th><th>Versión de tarifas</th><th>Precio</th></tr></thead>
+        <tbody id="registro"></tbody>
+      </table>
+    </div>
+    <div class="aviso"><b>Validez de la cotización (UC-01 6a):</b> [NEEDS CLARIFICATION: el caso no dice cuánto tiempo se mantiene el precio. Decide M. Duarte.]</div>
+  </section>
+
+  <!-- UC-02 Obtener versión de tarifas vigente · RF-03 -->
+  <section>
+    <h2>Versión de tarifas vigente</h2>
+    <p id="version"></p>
+    <p class="chico">La especificación no tiene un caso de uso para publicar versiones nuevas: la página solo conoce la 4.2.</p>
+  </section>
+</main>
+
+<script>
+// UC-02 · datos de specs/tarifas-v4.2.md
+const TARIFAS = {
+  version: "4.2",
+  fecha: "marzo 2024",
+  primaBase: { RC: 18000, TC: 32000, TR: 58000 },
+  edad: [[18, 1.45], [25, 1.15], [35, 1.00], [60, 1.10], [75, 1.35]],
+  antiguedad: [[0, 1.20], [4, 1.00], [11, 0.90], [21, 0.85]],
+  zona: { CABA: 1.25, GBA: 1.30, Interior: 1.00 },
+  siniestros: { 0: 0.90, 1: 1.00, 2: 1.25 },
+  guarda: { sinGarajeCabaGba: 1.10, resto: 1.00 }
+};
+const COBERTURAS = { RC: "Responsabilidad Civil", TC: "Terceros Completos", TR: "Todo Riesgo" };
+const CLAVE = "g7-cotizaciones";
+const $ = id => document.getElementById(id);
+const pesos = n => "$" + Math.round(n).toLocaleString("es-AR");
+
+// Busca el factor de la fila "desde" más alta que no supere el valor
+function desde(tabla, valor) {
+  let f = null;
+  for (const [d, factor] of tabla) if (valor >= d) f = factor;
+  return f;
+}
+
+// UC-01 paso 5 · RF-04: depende solo de los datos y de la versión, nunca del PAS
+function calcular(d, t) {
+  const pendientes = [];
+  const antig = new Date().getFullYear() - d.anio;
+  const fEdad = desde(t.edad, d.edad);
+  if (fEdad === null) pendientes.push("La versión de tarifas no tiene factor para un conductor de " + d.edad + " años. [NEEDS CLARIFICATION: ¿se cotiza? Decide M. Duarte.]");
+  const fSin = t.siniestros[d.siniestros];
+  if (fSin === undefined) pendientes.push("La versión de tarifas no tiene factor para " + d.siniestros + " siniestros. [NEEDS CLARIFICATION: ¿se cotiza? Decide M. Duarte.]");
+  const fAnt = desde(t.antiguedad, antig);
+  if (fAnt === null) pendientes.push("El año del vehículo es posterior al actual.");
+  if (pendientes.length) return { pendientes };
+  const fGuarda = d.garaje === "NO" && (d.zona === "CABA" || d.zona === "GBA") ? t.guarda.sinGarajeCabaGba : t.guarda.resto;
+  const precio = t.primaBase[d.cobertura] * fEdad * fAnt * t.zona[d.zona] * fSin * fGuarda;
+  return { precio, antig };
+}
+
+// RF-01: sin datos del vehículo, del conductor o cobertura no hay precio
+function faltantes(d) {
+  const f = [];
+  if (!d.anio) f.push("año del vehículo");
+  if (!d.zona) f.push("zona de radicación");
+  if (!d.garaje) f.push("guarda en garaje");
+  if (d.edad === null) f.push("edad del conductor");
+  if (d.siniestros === null) f.push("siniestros de los últimos 24 meses");
+  if (!d.cobertura) f.push("cobertura");
+  return f;
+}
+
+const num = id => $(id).value === "" ? null : Number($(id).value);
+
+function leer() {
+  return { anio: num("anio"), zona: $("zona").value, garaje: $("garaje").value,
+           edad: num("edad"), siniestros: num("siniestros"), cobertura: $("cobertura").value };
+}
+
+function cargar() {
+  try { return JSON.parse(localStorage.getItem(CLAVE)) || []; } catch { return []; }
+}
+function guardar(lista) {
+  try { localStorage.setItem(CLAVE, JSON.stringify(lista)); } catch {}
+}
+
+// UC-01 paso 6 · RF-02 · RF-03
+function pintarRegistro() {
+  $("registro").innerHTML = cargar().map(c => `<tr>
+    <td>${new Date(c.fecha).toLocaleString("es-AR")}</td>
+    <td>${c.pas}</td>
+    <td>Año ${c.datos.anio} · ${c.datos.zona} · garaje ${c.datos.garaje}</td>
+    <td>${c.datos.edad} años · ${c.datos.siniestros} siniestros</td>
+    <td>${COBERTURAS[c.datos.cobertura]}</td>
+    <td>${c.version}</td>
+    <td>${pesos(c.precio)}</td></tr>`).join("") || `<tr><td colspan="7" class="chico">Todavía no hay cotizaciones.</td></tr>`;
+}
+
+$("form").addEventListener("submit", e => {
+  e.preventDefault();
+  const d = leer();
+  const r = $("resultado");
+  const falta = faltantes(d);
+  if (falta.length) { r.innerHTML = `<p class="error">No se puede cotizar. Falta: ${falta.join(", ")}.</p>`; return; }
+  const c = calcular(d, TARIFAS);
+  if (c.pendientes) { r.innerHTML = c.pendientes.map(p => `<div class="aviso">${p}</div>`).join(""); return; }
+  let html = "";
+  // UC-01 flujo alternativo 2a: pendiente, se avisa pero no se bloquea
+  if (c.antig > 20) html += `<div class="aviso"><b>Antigüedad del vehículo (UC-01 2a):</b> el vehículo tiene ${c.antig} años. [NEEDS CLARIFICATION: M. Duarte dice que no se toman autos de más de 20 años; S. Roldán dice que hasta 25 si el cliente tiene otra póliza. Decide M. Duarte.]</div>`;
+  html += `<p class="chico">Precio (prima, sin impuestos) · versión de tarifas ${TARIFAS.version}</p><p class="precio" id="precio">${pesos(c.precio)}</p>`;
+  r.innerHTML = html;
+  const lista = cargar();
+  lista.unshift({ fecha: new Date().toISOString(), pas: $("pas").value, datos: d, version: TARIFAS.version, precio: c.precio });
+  guardar(lista);
+  pintarRegistro();
+});
+
+$("version").textContent = `Versión ${TARIFAS.version} (${TARIFAS.fecha})`;
+pintarRegistro();
+</script>
+</body>
+</html>
