@@ -13,6 +13,7 @@ mezclada).
 | RF-03 | G7-4 | El sistema debe registrar la versión de tarifas con la que se calculó cada cotización | Sistema / F | Caso §3.1 | En cualquier cotización se ve la versión de tarifas usada. |
 | RF-04 | G7-5 | Dos cotizaciones con el mismo vehículo, conductor, cobertura y versión de tarifas deben dar el mismo precio, sin importar qué PAS las pida | Negocio / F | Caso §3.1 | Se cotiza el mismo caso con dos PAS distintos: los precios son iguales |
 | RF-05 | G7-6 | El sistema debe aplicar descuentos al precio cotizado según las condiciones del cliente. [NEEDS CLARIFICATION: H. Vidal dice que los descuentos están topeados y no se acumulan; J. Ponce dice que se suman (débito automático, otra póliza y antigüedad). Además M. Duarte y R. Ferreyra definen distinto al cliente VIP. Decide M. Duarte.] | Negocio / F | Voces de M. Duarte, H. Vidal, J. Ponce y R. Ferreyra (§4) | Pendiente: no se puede definir hasta decidir si se acumulan y qué es un VIP. |
+| RF-06 | G7-10 | El sistema debe considerar vencida a toda cotización cuando pasaron quince días corridos desde su fecha de emisión | Negocio / F | Acta 3.ª §3.1 | Una cotización emitida el 02/11/2026 figura vigente el 16/11/2026 y vencida el 18/11/2026 |
 
 ## Fragmentos que NO son requerimientos funcionales
 
