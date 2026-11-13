@@ -15,6 +15,7 @@ mezclada).
 | RF-05 | G7-6 | El sistema debe aplicar descuentos al precio cotizado según las condiciones del cliente. [NEEDS CLARIFICATION: H. Vidal dice que los descuentos están topeados y no se acumulan; J. Ponce dice que se suman (débito automático, otra póliza y antigüedad). Además M. Duarte y R. Ferreyra definen distinto al cliente VIP. Decide M. Duarte.] | Negocio / F | Voces de M. Duarte, H. Vidal, J. Ponce y R. Ferreyra (§4) | Pendiente: no se puede definir hasta decidir si se acumulan y qué es un VIP. |
 | RF-06 | G7-10 | El sistema debe considerar vencida a toda cotización cuando pasaron quince días corridos desde su fecha de emisión | Negocio / F | Acta 3.ª §3.1 | Una cotización emitida el 02/11/2026 figura vigente el 16/11/2026 y vencida el 18/11/2026 |
 | RF-07 | G7-11 | El sistema no debe permitir aceptar una cotización vencida | Negocio / F | Acta 3.ª §3.1 | Al intentar aceptar una cotización vencida, el sistema no la acepta y avisa que hay que cotizar de nuevo |
+| RF-08 | G7-12 | El sistema debe calcular toda cotización nueva con la tarifa vigente, sin heredar el precio de una cotización anterior | Negocio / F | Acta 3.ª §3.1 | 	Al cotizar de nuevo los mismos datos de una cotización vencida, el precio se calcula con la tarifa vigente y no se copia el de la vencida |
 
 ## Fragmentos que NO son requerimientos funcionales
 
