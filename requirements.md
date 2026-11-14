@@ -20,21 +20,20 @@ mezclada).
 
 ## Fragmentos que NO son requerimientos funcionales
 
-Para cada fragmento del relevamiento que no calificó como RF, clasificar
-según las categorías de `skill/SKILL.md` (objetivo/meta de negocio,
-restricción técnica, RNF, dato de contexto) y justificar en una línea
-por qué no es un RF.
-
 | Fragmento | Texto | Categoría | Justificación |
 |-----------|-------|-----------|----------------|
-| | | | |
-| | | | |
+| A. Pampín (§4) | «Quiero un sistema rápido, moderno y fácil de usar. Que el productor lo pueda usar sin capacitación.» | RNF | Cualidades sin métrica: no se puede verificar con un sí o un no |
+| A. Pampín (§7) | «Tenemos que estar funcionando antes de que se jubile Héctor» | Objetivo de negocio | Es un plazo del proyecto, no una función del sistema |
+| Caso §3.1 | El PAS usa una planilla Excel descargada del sitio | Dato de contexto | Describe cómo se trabaja hoy; no pide nada del sistema nuevo |
+| Caso §3.1 | El PAS pasa el precio al cliente por WhatsApp o por teléfono | Dato de contexto | Describe el proceso actual; el caso no pide cambiarlo |
+| J. Ponce (Acta 3.ª §3.1) | «Dos semanas, por lo menos. El cliente compara con otras compañías» | Dato de contexto | Es el argumento de un plazo que la decisión fijó en quince días: el requerimiento es RF-06 |
 
 ## Conflictos u observaciones detectadas
 
-Si al procesar los fragmentos aparece un conflicto de valores (ver
-"Detección de conflictos" en la skill), documentarlo acá aunque no
-afecte directamente un RF puntual.
+- Descuentos: H. Vidal dice que están topeados; J. Ponce dice que se suman. [NEEDS CLARIFICATION: decide M. Duarte.] El acta de la tercera reunión confirma que este punto sigue abierto.
+- Antigüedad máxima del vehículo: M. Duarte dice 20 años; S. Roldán dice hasta 25 con otra póliza. [NEEDS CLARIFICATION: decide M. Duarte.]
+- Día 15 de la validez: el acta no dice si el día quince todavía cuenta como vigente. [NEEDS CLARIFICATION: decide M. Duarte.]
+- Renovación de una cotización vencida «con un solo paso»: el acta lo deja abierto (4.1, M. Duarte, 20/11/2026). No se especifica.
 
 ## Historial de cambios
 
@@ -42,3 +41,7 @@ afecte directamente un RF puntual.
 |------|---------|-------|------------|-------|
 | RF-02 | v1 | 19/10 | «…su precio y su fecha.» | G7-3 |
 | RF-02 | v2 | 12/11 | Pasa a «fecha de emisión»: lo decide M. Duarte en el Acta 3.ª §3.1 | G7-9  |
+| RF-06 | v1 | 12/11 | Nuevo: validez de quince días corridos (Acta 3.ª §3.1) | G7-10 |
+| RF-07 | v1 | 12/11 | Nuevo: una cotización vencida no se puede aceptar (Acta 3.ª §3.1) | G7-11 |
+| RF-08 | v1 | 12/11 | Nuevo: la cotización nueva no hereda el precio (Acta 3.ª §3.1) | G7-12 |
+| RF-09 | v1 | 12/11 | Nuevo: la cotización vigente conserva su precio si cambia la tarifa (Acta 3.ª §3.1) | G7-13 |
