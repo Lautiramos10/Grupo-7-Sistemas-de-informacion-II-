@@ -16,6 +16,7 @@ mezclada).
 | RF-06 | G7-10 | El sistema debe considerar vencida a toda cotización cuando pasaron quince días corridos desde su fecha de emisión | Negocio / F | Acta 3.ª §3.1 | Una cotización emitida el 02/11/2026 figura vigente el 16/11/2026 y vencida el 18/11/2026 |
 | RF-07 | G7-11 | El sistema no debe permitir aceptar una cotización vencida | Negocio / F | Acta 3.ª §3.1 | Al intentar aceptar una cotización vencida, el sistema no la acepta y avisa que hay que cotizar de nuevo |
 | RF-08 | G7-12 | El sistema debe calcular toda cotización nueva con la tarifa vigente, sin heredar el precio de una cotización anterior | Negocio / F | Acta 3.ª §3.1 | 	Al cotizar de nuevo los mismos datos de una cotización vencida, el precio se calcula con la tarifa vigente y no se copia el de la vencida |
+| RF-09 | G7-13 | 	El sistema debe mantener el precio de una cotización vigente aunque cambie la tarifa, hasta que la cotización venza | Negocio / F | Acta 3.ª §3.1 | Una cotización vigente sigue mostrando su precio y su versión después de publicarse una versión nueva de tarifas |
 
 ## Fragmentos que NO son requerimientos funcionales
 
