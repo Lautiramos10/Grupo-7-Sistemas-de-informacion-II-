@@ -1,0 +1,304 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cotizador Pampa · G7 · v2</title>
+<style>
+  :root { --tinta:#1f2a44; --suave:#5b6478; --borde:#d6dae3; --fondo:#f6f7fa; --acento:#2f5fd0; --aviso:#fff6db; --avisoBorde:#e2c35b; --error:#b3261e; --ok:#1a7f37; }
+  * { box-sizing:border-box; }
+  body { margin:0; font-family:system-ui,-apple-system,"Segoe UI",sans-serif; color:var(--tinta); background:var(--fondo); }
+  header { background:var(--tinta); color:#fff; padding:14px 20px; }
+  header h1 { margin:0; font-size:18px; }
+  header p { margin:2px 0 0; font-size:13px; opacity:.8; }
+  main { max-width:1100px; margin:0 auto; padding:16px; display:grid; gap:16px; }
+  section { background:#fff; border:1px solid var(--borde); border-radius:8px; padding:16px; }
+  h2 { font-size:15px; margin:0 0 12px; }
+  .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:10px 16px; }
+  label { display:flex; flex-direction:column; font-size:13px; gap:4px; color:var(--suave); }
+  input, select { font:inherit; padding:6px 8px; border:1px solid var(--borde); border-radius:6px; color:var(--tinta); }
+  fieldset { border:1px solid var(--borde); border-radius:6px; margin:0 0 12px; padding:10px 12px; }
+  legend { font-size:13px; font-weight:600; padding:0 4px; }
+  button { font:inherit; background:var(--acento); color:#fff; border:0; border-radius:6px; padding:8px 16px; cursor:pointer; }
+  button.chico { padding:4px 10px; font-size:12px; }
+  button:disabled { background:#aab2c5; cursor:not-allowed; }
+  .aviso { background:var(--aviso); border:1px solid var(--avisoBorde); border-radius:6px; padding:8px 10px; font-size:13px; margin:6px 0; }
+  .prueba { background:#eef3ff; border:1px dashed var(--acento); border-radius:6px; padding:8px 10px; font-size:13px; }
+  .error { color:var(--error); font-size:13px; margin:6px 0; }
+  .vigente { color:var(--ok); font-weight:600; }
+  .vencida { color:var(--error); font-weight:600; }
+  .precio { font-size:28px; font-weight:700; margin:4px 0; }
+  .chico { font-size:12px; color:var(--suave); }
+  table { width:100%; border-collapse:collapse; font-size:13px; }
+  th, td { text-align:left; border-bottom:1px solid var(--borde); padding:6px; vertical-align:top; }
+  th { background:var(--fondo); }
+  .tabla { overflow-x:auto; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Cotizador de seguro automotor · Aseguradora Pampa</h1>
+  <p>Versión 2 · generada desde la especificación del Grupo 7 (frente Cotización) tras el cambio del Acta 3.ª §3.1 · evidencia de validación E4</p>
+</header>
+<main>
+
+  <!-- CONTROL DE PRUEBA: no sale de ningún RF. Permite probar RF-06 y RF-07 (CA-08, CA-09) sin esperar quince días. -->
+  <section>
+    <h2>Fecha de hoy (solo para pruebas)</h2>
+    <div class="prueba">
+      <label style="max-width:240px">Fecha de hoy <input type="date" id="hoy"></label>
+      <p class="chico">Control de prueba: no forma parte de la especificación. Es el reloj de la página: define la fecha de emisión de las cotizaciones nuevas y la de las consultas de vigencia.</p>
+    </div>
+  </section>
+
+  <!-- Precondición UC-01: el PAS está identificado en el sistema -->
+  <section>
+    <h2>PAS identificado</h2>
+    <label style="max-width:320px">PAS
+      <select id="pas">
+        <option value="PAS 101 – J. Ponce">PAS 101 – J. Ponce</option>
+        <option value="PAS 102 – PAS de prueba">PAS 102 – PAS de prueba</option>
+      </select>
+    </label>
+    <p class="chico">La especificación no define cómo se identifica el PAS: se elige de una lista de prueba.</p>
+  </section>
+
+  <!-- UC-01 pasos 1 a 5 · RF-01 · RF-08 -->
+  <section>
+    <h2>Nueva cotización</h2>
+    <form id="form" novalidate>
+      <!-- UC-01 paso 2 · RF-01: datos del vehículo -->
+      <fieldset>
+        <legend>Datos del vehículo</legend>
+        <div class="grid">
+          <label>Año del vehículo <input type="number" id="anio" min="1950" max="2100"></label>
+          <label>Zona de radicación
+            <select id="zona"><option value="">— elegir —</option><option>CABA</option><option>GBA</option><option>Interior</option></select>
+          </label>
+          <label>Guarda en garaje
+            <select id="garaje"><option value="">— elegir —</option><option value="SI">Sí</option><option value="NO">No</option></select>
+          </label>
+        </div>
+      </fieldset>
+      <!-- UC-01 paso 2 · RF-01: datos del conductor -->
+      <fieldset>
+        <legend>Datos del conductor</legend>
+        <div class="grid">
+          <label>Edad del conductor habitual <input type="number" id="edad" min="0" max="120"></label>
+          <label>Siniestros últimos 24 meses <input type="number" id="siniestros" min="0" max="50"></label>
+        </div>
+      </fieldset>
+      <!-- UC-01 paso 3 · RF-01: cobertura -->
+      <fieldset>
+        <legend>Cobertura</legend>
+        <label style="max-width:320px">Cobertura
+          <select id="cobertura">
+            <option value="">— elegir —</option>
+            <option value="RC">Responsabilidad Civil (RC)</option>
+            <option value="TC">Terceros Completos (TC)</option>
+            <option value="TR">Todo Riesgo (TR)</option>
+          </select>
+        </label>
+      </fieldset>
+      <!-- UC-01 flujo alternativo 5a · RF-05: pendiente, no se aplica -->
+      <div class="aviso"><b>Descuentos (RF-05, UC-01 5a):</b> [NEEDS CLARIFICATION: si los descuentos se suman (J. Ponce) o tienen tope (H. Vidal), y qué es un cliente VIP (M. Duarte / R. Ferreyra). Decide M. Duarte.] La página no aplica descuentos.</div>
+      <button type="submit" id="cotizar">Cotizar</button>
+    </form>
+    <div id="resultado"></div>
+  </section>
+
+  <!-- UC-01 paso 6 · RF-02 v2 · RF-03 · RF-06 · RF-07 · RF-09 -->
+  <section>
+    <h2>Registro de cotizaciones</h2>
+    <div class="tabla">
+      <table>
+        <thead><tr><th>Fecha de emisión</th><th>PAS</th><th>Vehículo</th><th>Conductor</th><th>Cobertura</th><th>Versión de tarifas</th><th>Precio</th><th>Vigencia</th><th>Estado</th></tr></thead>
+        <tbody id="registro"></tbody>
+      </table>
+    </div>
+    <p class="chico">RF-09: el precio y la versión se guardan al cotizar y no se recalculan: la cotización conserva su precio aunque cambie la tarifa.</p>
+    <!-- UC-01 flujo alternativo 6a · RF-06: validez de quince días corridos (Acta 3.ª §3.1) -->
+    <div class="aviso"><b>Validez (RF-06, UC-01 6a):</b> quince días corridos desde la fecha de emisión. [NEEDS CLARIFICATION: ¿el día quince cuenta como vigente? Decide M. Duarte.] Ese día la página no la da por vigente ni por vencida y no permite aceptarla.</div>
+    <!-- Acta 3.ª §4.1: pendiente, no se implementa -->
+    <div class="aviso"><b>Renovar una cotización vencida:</b> [NEEDS CLARIFICATION: ¿se puede volver a cotizar «con un solo paso» y con qué datos? Acta 3.ª §4.1, decide M. Duarte, 20/11/2026.] La página no lo implementa: hay que cargar la cotización nueva completa.</div>
+  </section>
+
+  <!-- UC-02 Obtener versión de tarifas vigente · RF-03 -->
+  <section>
+    <h2>Versión de tarifas vigente</h2>
+    <p id="version"></p>
+    <p class="chico">La especificación no tiene un caso de uso para publicar versiones nuevas: la página solo conoce la 4.2. Por eso CA-04 (segunda parte), CA-10 y CA-11 no se pueden ejecutar.</p>
+  </section>
+</main>
+
+<script>
+// ---------- Datos · UC-02 (specs/tarifas-v4.2.md) ----------
+const TARIFAS = {
+  version: "4.2",
+  fecha: "marzo 2024",
+  primaBase: { RC: 18000, TC: 32000, TR: 58000 },
+  edad: [[18, 1.45], [25, 1.15], [35, 1.00], [60, 1.10], [75, 1.35]],
+  antiguedad: [[0, 1.20], [4, 1.00], [11, 0.90], [21, 0.85]],
+  zona: { CABA: 1.25, GBA: 1.30, Interior: 1.00 },
+  siniestros: { 0: 0.90, 1: 1.00, 2: 1.25 },
+  guarda: { sinGarajeCabaGba: 1.10, resto: 1.00 }
+};
+const COBERTURAS = { RC: "Responsabilidad Civil", TC: "Terceros Completos", TR: "Todo Riesgo" };
+const VALIDEZ_DIAS = 15; // RF-06 · Acta 3.ª §3.1
+const ANTIGUEDAD_MAX = 20; // RF-10 · Acta 2.ª §3.3 · [CONFIRMAR: si el umbral fuera 25, se cambia solo acá]
+const CLAVE = "g7-cotizaciones-v2";
+
+// ---------- Funciones puras (se pueden probar sin pantalla) ----------
+// PURAS-INICIO
+// Busca el factor de la fila "desde" más alta que no supere el valor
+function desde(tabla, valor) {
+  let f = null;
+  for (const [d, factor] of tabla) if (valor >= d) f = factor;
+  return f;
+}
+
+// UC-01 paso 5 · RF-04 · RF-08: depende solo de los datos, de la versión y del año de hoy, nunca del PAS
+// ni de una cotización anterior (RF-08: la cotización nueva no hereda el precio)
+function calcular(d, t, anioHoy) {
+  const pendientes = [];
+  const antig = anioHoy - d.anio;
+  const fEdad = desde(t.edad, d.edad);
+  if (fEdad === null) pendientes.push("La versión de tarifas no tiene factor para un conductor de " + d.edad + " años. [NEEDS CLARIFICATION: ¿se cotiza? Decide M. Duarte.]");
+  const fSin = t.siniestros[d.siniestros];
+  if (fSin === undefined) pendientes.push("La versión de tarifas no tiene factor para " + d.siniestros + " siniestros. [NEEDS CLARIFICATION: ¿se cotiza? Decide M. Duarte.]");
+  const fAnt = desde(t.antiguedad, antig);
+  if (fAnt === null) pendientes.push("El año del vehículo es posterior al actual.");
+  if (pendientes.length) return { pendientes };
+  const fGuarda = d.garaje === "NO" && (d.zona === "CABA" || d.zona === "GBA") ? t.guarda.sinGarajeCabaGba : t.guarda.resto;
+  const precio = t.primaBase[d.cobertura] * fEdad * fAnt * t.zona[d.zona] * fSin * fGuarda;
+  return { precio, antig };
+}
+
+// RF-01: sin datos del vehículo, del conductor o cobertura no hay precio
+function faltantes(d) {
+  const f = [];
+  if (!d.anio) f.push("año del vehículo");
+  if (!d.zona) f.push("zona de radicación");
+  if (!d.garaje) f.push("guarda en garaje");
+  if (d.edad === null) f.push("edad del conductor");
+  if (d.siniestros === null) f.push("siniestros de los últimos 24 meses");
+  if (!d.cobertura) f.push("cobertura");
+  return f;
+}
+
+// RF-10 · UC-01 2a: un vehículo de más de ANTIGUEDAD_MAX años no se cotiza
+function excedeAntiguedad(anio, anioHoy) { return (anioHoy - anio) > ANTIGUEDAD_MAX; }
+
+// RF-06: días corridos entre dos fechas AAAA-MM-DD
+function diasEntre(desdeISO, hastaISO) {
+  const a = Date.UTC(...desdeISO.split("-").map((n, i) => i === 1 ? n - 1 : +n));
+  const b = Date.UTC(...hastaISO.split("-").map((n, i) => i === 1 ? n - 1 : +n));
+  return Math.round((b - a) / 86400000);
+}
+
+// RF-06: menos de 15 días = vigente; más de 15 = vencida; justo 15 = pendiente de decisión (M. Duarte)
+function vigencia(emisionISO, hoyISO) {
+  const dias = diasEntre(emisionISO, hoyISO);
+  const estado = dias < VALIDEZ_DIAS ? "vigente" : dias > VALIDEZ_DIAS ? "vencida" : "pendiente";
+  return { dias, estado };
+}
+
+// RF-07: una cotización vencida no se puede aceptar. Una aceptada ya está aceptada.
+// En el día quince no se acepta hasta que decida M. Duarte (ver aviso de validez).
+function puedeAceptar(c, hoyISO) {
+  if (c.aceptadaEl) return { ok: false, motivo: "Ya está aceptada." };
+  const v = vigencia(c.emision, hoyISO);
+  if (v.estado === "vencida") return { ok: false, motivo: "La cotización está vencida: hay que cotizar de nuevo con la tarifa vigente." };
+  if (v.estado === "pendiente") return { ok: false, motivo: "Es el día quince de la validez. [NEEDS CLARIFICATION: ¿cuenta como vigente? Decide M. Duarte.]" };
+  return { ok: true };
+}
+// PURAS-FIN
+
+// ---------- Pantalla ----------
+const $ = id => document.getElementById(id);
+const pesos = n => "$" + Math.round(n).toLocaleString("es-AR");
+const fmtFecha = iso => iso.split("-").reverse().join("/");
+const hoyReal = () => { const h = new Date(); return h.getFullYear() + "-" + String(h.getMonth() + 1).padStart(2, "0") + "-" + String(h.getDate()).padStart(2, "0"); };
+const hoy = () => $("hoy").value || hoyReal();
+const num = id => $(id).value === "" ? null : Number($(id).value);
+
+function leer() {
+  return { anio: num("anio"), zona: $("zona").value, garaje: $("garaje").value,
+           edad: num("edad"), siniestros: num("siniestros"), cobertura: $("cobertura").value };
+}
+function cargar() { try { return JSON.parse(localStorage.getItem(CLAVE)) || []; } catch { return []; } }
+function guardar(lista) { try { localStorage.setItem(CLAVE, JSON.stringify(lista)); } catch {} }
+
+// UC-01 paso 6 · RF-02 v2 · RF-03 · RF-06 · RF-07 · RF-09
+function pintarRegistro() {
+  const h = hoy();
+  const lista = cargar();
+  $("registro").innerHTML = lista.map((c, i) => {
+    let vig, estado;
+    if (c.aceptadaEl) {
+      vig = `<span class="chico">Aceptada el ${fmtFecha(c.aceptadaEl)}</span>`;
+      estado = "Aceptada";
+    } else {
+      const v = vigencia(c.emision, h);
+      const txt = v.estado === "vigente" ? "Vigente" : v.estado === "vencida" ? "Vencida" : "Día 15: pendiente de decisión";
+      vig = `<span class="${v.estado === "vencida" ? "vencida" : v.estado === "vigente" ? "vigente" : ""}">${txt}</span><br><span class="chico">${v.dias} días corridos</span>`;
+      const a = puedeAceptar(c, h);
+      estado = `<button class="chico" data-i="${i}" ${a.ok ? "" : "disabled"}>Aceptar</button>` + (a.ok ? "" : `<br><span class="chico">${a.motivo}</span>`);
+    }
+    return `<tr>
+      <td>${fmtFecha(c.emision)}</td>
+      <td>${c.pas}</td>
+      <td>Año ${c.datos.anio} · ${c.datos.zona} · garaje ${c.datos.garaje}</td>
+      <td>${c.datos.edad} años · ${c.datos.siniestros} siniestros</td>
+      <td>${COBERTURAS[c.datos.cobertura]}</td>
+      <td>${c.version}</td>
+      <td>${pesos(c.precio)}</td>
+      <td>${vig}</td>
+      <td>${estado}</td></tr>`;
+  }).join("") || `<tr><td colspan="9" class="chico">Todavía no hay cotizaciones.</td></tr>`;
+}
+
+// RF-07: aceptar. El mensaje al PAS sale en pantalla; la cotización vencida queda como está.
+$("registro").addEventListener("click", e => {
+  const i = e.target.dataset && e.target.dataset.i;
+  if (i === undefined) return;
+  const lista = cargar();
+  const c = lista[+i];
+  const a = puedeAceptar(c, hoy());
+  if (!a.ok) { $("resultado").innerHTML = `<div class="aviso">${a.motivo}</div>`; return; }
+  c.aceptadaEl = hoy();
+  guardar(lista);
+  $("resultado").innerHTML = `<p class="vigente">Cotización aceptada el ${fmtFecha(c.aceptadaEl)}.</p>`;
+  pintarRegistro();
+});
+
+$("form").addEventListener("submit", e => {
+  e.preventDefault();
+  const d = leer();
+  const r = $("resultado");
+  const falta = faltantes(d);
+  if (falta.length) { r.innerHTML = `<p class="error">No se puede cotizar. Falta: ${falta.join(", ")}.</p>`; return; }
+  const h = hoy();
+  const anioHoy = Number(h.slice(0, 4));
+  // UC-01 flujo alternativo 2a · RF-10: más de ANTIGUEDAD_MAX años no se cotiza
+  if (excedeAntiguedad(d.anio, anioHoy)) { r.innerHTML = `<div class="aviso"><b>No se cotiza (RF-10, UC-01 2a):</b> el vehículo tiene ${anioHoy - d.anio} años y supera la antigüedad máxima de ${ANTIGUEDAD_MAX} años. [CONFIRMAR con el Acta 2.ª §3.3: umbral de ${ANTIGUEDAD_MAX} años. S. Roldán dice hasta 25 con otra póliza.]</div>`; return; }
+  const c = calcular(d, TARIFAS, anioHoy);
+  if (c.pendientes) { r.innerHTML = c.pendientes.map(p => `<div class="aviso">${p}</div>`).join(""); return; }
+  let html = "";
+  // RF-08: calculada con la tarifa vigente, sin heredar el precio de una cotización anterior
+  html += `<p class="chico">Precio (prima, sin impuestos) · versión de tarifas ${TARIFAS.version} · emitida el ${fmtFecha(h)} · válida quince días corridos</p><p class="precio" id="precio">${pesos(c.precio)}</p>`;
+  r.innerHTML = html;
+  const lista = cargar();
+  // RF-02 v2 · RF-03 · RF-09: se guarda la fecha de emisión, la versión y el precio de este momento
+  lista.unshift({ emision: h, pas: $("pas").value, datos: d, version: TARIFAS.version, precio: c.precio, aceptadaEl: null });
+  guardar(lista);
+  pintarRegistro();
+});
+
+$("hoy").value = hoyReal();
+$("hoy").addEventListener("change", pintarRegistro);
+$("version").textContent = `Versión ${TARIFAS.version} (${TARIFAS.fecha})`;
+pintarRegistro();
+</script>
+</body>
+</html>

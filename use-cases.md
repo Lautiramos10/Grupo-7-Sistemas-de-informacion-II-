@@ -17,9 +17,9 @@
 **Flujo(s) alternativo(s):**
 - 5a: El cliente tiene condiciones de descuento: se ejecuta UC-03 Aplicar descuentos (extend) y el sistema calcula el precio con descuento.
 - 2a: El vehiculo supera la antigüedad maxima: [NEEDS CLARIFICATION: M. Duarte dice 20 años; S. Roldan dice hasta 25 con otra poliza. Decide M. Duarte]
-- 6a. Validez de la cotizacion: [NEEDS CLARIFICATION: el caso no dice cuanto mantiene el precio. Decide M. Duarte]
+- 6a: La cotización tiene una validez de quince días corridos desde su fecha de emisión (RF-06). Pasado ese plazo está vencida y no se puede aceptar (RF-07): hay que cotizar de nuevo con la tarifa vigente, sin heredar el precio (RF-08). Dentro de la validez conserva su precio aunque cambie la tarifa (RF-09). [NEEDS CLARIFICATION: ¿el día quince cuenta como vigente? Decide M. Duarte.]
 
-**Postcondición: La cotizacion queda registrada con su precio, la version de tarifas y la fecha.**
+**Postcondición: La cotizacion queda registrada con su precio, la version de tarifas y la fecha de emisión.**
 
 **Relaciones con otros casos de uso:**
 
@@ -44,3 +44,5 @@ de uso, y qué parte del flujo justifica cada uno.
 | Caso §3.1 | El orden del flujo: datos del vehículo y del conductor, precio, comunicación al cliente |
 | Caso §3.1 (situación observada) y §6 | El include de la versión de tarifas y las tres coberturas típicas |
 | Voces de J. Ponce y H. Vidal (§4) | El extend de descuentos y su conflicto abierto |
+| Voces de M. Duarte y S. Roldán (§4) | El alternativo 2a de antigüedad del vehículo |
+| Acta 3.ª §3.1 | El alternativo 6a: validez de quince días y fecha de emisión |
